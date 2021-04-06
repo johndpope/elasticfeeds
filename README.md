@@ -1,4 +1,4 @@
- 
+
 
 ![](https://travis-ci.com/qlands/elasticfeeds.svg?branch=master) ![](https://codecov.io/gh/qlands/elasticfeeds/branch/master/graph/badge.svg)
 
@@ -8,9 +8,9 @@ A python library to manage notification and activity feeds using Elasticsearch a
 
 ## Description
 
-Few years ago, I started to work on [FormShare](https://github.com/qlands/FormShare), a platform built with Python and Pyramid that has Social Media features, and I had to get my hands into handling activity feeds. After searching the Internet for possible Python frameworks, I realized that those well maintained like [Django Activity Stream](https://django-activity-stream.readthedocs.io/en/latest/index.html)  or [Stream Framework](https://github.com/tschellenbach/Stream-Framework) were very oriented to Django (which I hate). Furthermore, both frameworks use asynchronous tasks to perform “fan-out on write” operations which I think is an overkill if you consider a user like @katyperry with 107,805,373 followers.
+Few years ago I started to work on [FormShare](https://github.com/qlands/FormShare), a platform built with Python and Pyramid that has Social Media features, and I had to get my hands into handling activity feeds. After searching the Internet for possible Python frameworks, I realized that those well maintained like [Django Activity Stream](https://django-activity-stream.readthedocs.io/en/latest/index.html)  or [Stream Framework](https://github.com/tschellenbach/Stream-Framework) were very oriented to Django (which I hate). Furthermore, both frameworks use asynchronous tasks to perform “fan-out on write” operations which I think is an overkill if you consider a user like @katyperry with 107,805,373 followers.
 
-Later, I encounter a post in Stack Overflow on "[Creating a SOLR index for activity stream or news feed](https://stackoverflow.com/questions/44468264/creating-a-solr-index-for-activity-stream-or-newsfeed#comment91900926_44468264)" which attached a presentation on "[A news feed with ElasticSearch](http://www.quentinsuire.com/presentations/a-news-feed-with-elasticsearch)". The authors explain how to use [Elasticsearch](<https://www.elastic.co/products/elasticsearch)  to create “fan-out on read” by “Storing atomic news and compose a news feed at the query time”.
+Later, I encounter a post in Stack Overflow on "[Creating a SOLR index for activity stream or news feed](https://stackoverflow.com/questions/44468264/creating-a-solr-index-for-activity-stream-or-newsfeed#comment91900926_44468264)" which attached a presentation on "[A news feed with ElasticSearch](http://www.quentinsuire.com/presentations/a-news-feed-with-elasticsearch)". The authors explain how to use [Elasticsearch](https://www.elastic.co/products/elasticsearch) to create “fan-out on read” by “Storing atomic news and compose a news feed at the query time”.
 
 After some trial and error, I managed to have feeds in Elasticsearch and perform fan-out on reads. Elasticsearch is incredible fast even with aggregation operations. The presentation on Elasticsearch talks about 40 milliseconds with 140 million of feeds with a 3 nodes. Elasticsearch is scalable which helps if you want to start small e.g., 1 node and progressively add more on demand.
 
