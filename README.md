@@ -1,6 +1,5 @@
-
-
-![(https://travis-ci.com/github/qlands/elasticfeeds)](https://travis-ci.com/qlands/elasticfeeds.svg?branch=master) ![(https://app.codecov.io/gh/qlands/elasticfeeds)](https://codecov.io/gh/qlands/elasticfeeds/branch/master/graph/badge.svg)
+[![Travis](https://travis-ci.com/qlands/elasticfeeds.svg?branch=master)](https://travis-ci.com/github/qlands/elasticfeeds)
+[![Codecov](https://codecov.io/gh/qlands/elasticfeeds/branch/master/graph/badge.svg)](https://app.codecov.io/gh/qlands/elasticfeeds)
 
 # ElasticFeeds
 
