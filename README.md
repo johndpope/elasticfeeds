@@ -1,5 +1,6 @@
-[![Travis](https://travis-ci.com/qlands/elasticfeeds.svg?branch=master)](https://travis-ci.com/github/qlands/elasticfeeds)
-[![Codecov](https://codecov.io/gh/qlands/elasticfeeds/branch/master/graph/badge.svg)](https://app.codecov.io/gh/qlands/elasticfeeds)
+[![CircleCI](https://circleci.com/gh/qlands/elasticfeeds.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/qlands/elasticfeeds)
+[![Codecov](https://codecov.io/github/qlands/elasticfeeds/branch/master/graph/badge.svg)](https://app.codecov.io/gh/qlands/elasticfeeds/commits?page=1)
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 # ElasticFeeds
 
