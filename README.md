@@ -18,7 +18,7 @@ Handling feeds in Elasticsearch and write aggregation queries is something that 
 
 ## Requirements
 
-- ElasticSearch >= 6.8.X
+- ElasticSearch >= 7.14.X
 
 ## Usage
 
