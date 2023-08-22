@@ -44,3 +44,8 @@ def test_different_dates():
     tst_manager.add_activity_feed(tst_activity)
     # Wait 2 seconds for ES to store previous data. This is only for this testing script
     time.sleep(2)
+
+
+    
+if __name__ == "__main__":
+    test_different_dates()

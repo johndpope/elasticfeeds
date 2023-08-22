@@ -11,3 +11,7 @@ def test_remove():
 
     # Carlos un-follow Eduardo. Test of convenience function
     tst_manager.un_follow("cquiros", "edoquiros")
+
+
+if __name__ == "__main__":
+    test_remove()

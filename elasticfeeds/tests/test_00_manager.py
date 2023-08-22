@@ -8,24 +8,35 @@ import datetime
 import time
 import requests
 
+from elasticfeeds.aggregators import (
+    UnAggregated,
+    RecentTypeAggregator,
+    RecentTypeObjectAggregator,
+    RecentObjectTypeAggregator,
+    DateWeightAggregator,
+    YearMonthTypeAggregator,
+    YearMonthAggregator,
+)
 
 def test_manager():
-    es_host = "localhost"
+    es_host = "0.0.0.0"
     es_port = 9200
     use_ssl = "False"
     ready = False
-    print("Waiting for ES to be ready")
+    # username = 'elastic'
+    # password = 'changeme'
+    host = "http://{}:{}/_cluster/health".format(es_host, es_port)  # noqa: E501
+
+    print("Waiting for ES to be ready check :",host)
+
     while not ready:
         try:
             if use_ssl == "False":
-                resp = requests.get(
-                    "http://{}:{}/_cluster/health".format(es_host, es_port)
-                )
+                resp = requests.get(host)
             else:
-                resp = requests.get(
-                    "https://{}:{}/_cluster/health".format(es_host, es_port)
-                )
+                resp = requests.get(host)
             data = resp.json()
+            print("json:",data)
             if data["status"] == "yellow" or data["status"] == "green":
                 ready = True
             else:
@@ -41,7 +52,7 @@ def test_manager():
         "testfeeds",
         "testnetwork",
         delete_network_if_exists=True,
-        delete_feeds_if_exists=True,
+        delete_feeds_if_exists=True
     )
     # Creates a linked activity
     tst_linked_activity = LinkedActivity("cquiros")
@@ -61,6 +72,9 @@ def test_manager():
     tst_link.extra = {"some_extra_data": "test"}
 
     # Adds the network link
+    # tst_manager.delete_feeds_index()
+    # tst_manager.delete_network_index()
+    
     tst_manager.add_network_link(tst_link)
 
     # Carlos follow Eduardo. Test of convenience function
@@ -165,3 +179,46 @@ def test_manager():
     tst_manager.watch("cquiros", "50a808d3-1227-4149-80e9-20922bded1cf", "project")
     # Wait 2 seconds for ES to store previous data. This is only for this testing script
     time.sleep(2)
+
+
+
+    # Test Un-aggregated aggregator
+    tst_base_aggregator = UnAggregated("cquiros")
+    # This will bring 5 records
+    test = tst_manager.get_feeds(tst_base_aggregator)
+    print("test:",test)
+
+    # Test recent type aggregator
+    tst_recent_type_aggregator = RecentTypeAggregator("cquiros")
+    test = tst_manager.get_feeds(tst_recent_type_aggregator)
+    print("test:",test)
+
+    # Test recent type object aggregator
+    tst_recent_type_object_aggregator = RecentTypeObjectAggregator("cquiros")
+    test = tst_manager.get_feeds(tst_recent_type_object_aggregator)
+    print("test:",test)
+    
+    # Test recent object type aggregator
+    tst_recent_object_type_aggregator = RecentObjectTypeAggregator("cquiros")
+    test = tst_manager.get_feeds(tst_recent_object_type_aggregator)
+    print("test:",test)
+    
+    # Test recent object type aggregator
+    tst_date_weight_aggregator = DateWeightAggregator("cquiros")
+    test = tst_manager.get_feeds(tst_date_weight_aggregator)
+    print("test:",test)
+    
+    # Test year, month, type aggregator
+    tst_year_month_type_aggregator = YearMonthTypeAggregator("cquiros")
+    test = tst_manager.get_feeds(tst_year_month_type_aggregator)
+    print("test:",test)
+    
+    # Test year, month, type aggregator
+    tst_year_month_aggregator = YearMonthAggregator("cquiros")
+    test = tst_manager.get_feeds(tst_year_month_aggregator)
+    print("test:",test)
+    
+
+
+if __name__ == "__main__":
+    test_manager()

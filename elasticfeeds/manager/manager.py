@@ -217,8 +217,7 @@ class Manager(object):
             [cnt_params],
             max_retries=100,
             retry_on_timeout=True,
-            timeout=700,
-            request_timeout=800,
+            timeout=700
         )
         if connection.ping():
             return connection
@@ -227,7 +226,7 @@ class Manager(object):
 
     def __init__(
         self,
-        feed_index="feeds",
+        feed_index= "feeds",
         network_index="network",
         host="localhost",
         port=9200,
@@ -269,21 +268,20 @@ class Manager(object):
 
         connection = self.create_connection()
         if connection is not None:
-            if not connection.indices.exists(feed_index):
+            if not connection.indices.exists(index=feed_index):
                 try:
-                    connection.indices.create(
-                        feed_index,
+                    connection.indices.create(index=feed_index,
                         body=_get_feed_index_definition(
                             number_of_shards_in_feeds, number_of_replicas_in_feeds
                         ),
                     )
                 except RequestError as e:
+                    print("e:",e)
                     if e.status_code == 400:
                         if e.error.find("already_exists") >= 0:
                             if delete_feeds_if_exists:
                                 self.delete_feeds_index()
-                                connection.indices.create(
-                                    feed_index,
+                                connection.indices.create(index=feed_index,
                                     body=_get_feed_index_definition(
                                         number_of_shards_in_feeds,
                                         number_of_replicas_in_feeds,
@@ -295,15 +293,16 @@ class Manager(object):
                             raise e
                     else:
                         raise e
-            if not connection.indices.exists(network_index):
+            if not connection.indices.exists(index=network_index):
                 try:
                     connection.indices.create(
-                        network_index,
+                        index=network_index,
                         body=_get_network_index_definition(
                             number_of_shards_in_network, number_of_replicas_in_network
                         ),
                     )
                 except RequestError as e:
+                    print("e:",e)
                     if e.status_code == 400:
                         if e.error.find("already_exists") >= 0:
                             if delete_network_if_exists:
@@ -345,7 +344,7 @@ class Manager(object):
         """
         connection = self.create_connection()
         if connection is not None:
-            connection.indices.delete(self.feed_index)
+            connection.indices.delete(index=self.feed_index)
             return True
         return False
 
@@ -358,7 +357,7 @@ class Manager(object):
         """
         connection = self.create_connection()
         if connection is not None:
-            connection.indices.delete(self.network_index)
+            connection.indices.delete(index=self.network_index)
             return True
         return False
 
