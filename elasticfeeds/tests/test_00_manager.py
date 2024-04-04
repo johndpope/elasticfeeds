@@ -8,6 +8,11 @@ import datetime
 import time
 import requests
 
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)  # Disable SSL warnings
+
 from elasticfeeds.aggregators import (
     UnAggregated,
     RecentTypeAggregator,
@@ -21,23 +26,27 @@ from elasticfeeds.aggregators import (
 def test_manager():
     es_host = "0.0.0.0"
     es_port = 9200
-    use_ssl = "False"
+    use_ssl = True  # Set to True if you are using SSL
+    scheme = 'https' if use_ssl else 'http'
+    username = 'admin'
+    password = 'admin'
+    es_url = f"{scheme}://{username}:{password}@{es_host}:{es_port}"
+    
+    print("Waiting for ES to be ready check at:", es_url)
+
+    # Setup requests session to retry on failure and ignore SSL verification
+    session = requests.Session()
+    retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
+    session.mount('https://', HTTPAdapter(max_retries=retries))
+    # Check Elasticsearch health
+    health_url = f"{scheme}://{es_host}:{es_port}/_cluster/health"
     ready = False
-    # username = 'elastic'
-    # password = 'changeme'
-    host = "http://{}:{}/_cluster/health".format(es_host, es_port)  # noqa: E501
-
-    print("Waiting for ES to be ready check :",host)
-
     while not ready:
         try:
-            if use_ssl == "False":
-                resp = requests.get(host)
-            else:
-                resp = requests.get(host)
+            resp = session.get(health_url, auth=(username, password), verify=False)  # Disable SSL cert verification
             data = resp.json()
-            print("json:",data)
-            if data["status"] == "yellow" or data["status"] == "green":
+            print("json:", data)
+            if data["status"] in ["yellow", "green"]:
                 ready = True
             else:
                 time.sleep(30)
@@ -47,13 +56,21 @@ def test_manager():
 
     print("ES is ready")
 
-    now = datetime.datetime.now()
+    # Create the Manager instance with the correct connection settings
     tst_manager = Manager(
         "testfeeds",
         "testnetwork",
+        host=es_host,
+        port=es_port,
+        use_ssl=use_ssl,
+        username="admin",
+        password="admin",
         delete_network_if_exists=True,
         delete_feeds_if_exists=True
     )
+
+
+    now = datetime.datetime.now()
     # Creates a linked activity
     tst_linked_activity = LinkedActivity("cquiros")
     # Testing properties
